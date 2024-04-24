@@ -22,6 +22,7 @@ parser.add_argument('-ih', '--iconheight', help='Icon height', required=False, d
 parser.add_argument('-ix', '--iconx', help='Icon x offset', required=False, default=16)
 parser.add_argument('-iy', '--icony', help='Icon y offset', required=False, default=16)
 parser.add_argument('-ia', '--iconangle', help='icon angle column', default=None)
+parser.add_argument('-in', '--iconnumber', help='icon number', default=1)
 
 
 args = parser.parse_args()
@@ -31,7 +32,7 @@ with open(args.output, 'w') as f:
     filenum=1
     f.write('Title: {}\n'.format(args.title))
     f.write('Refresh: 60\n') # probably dont need to refresh
-    f.write(f'IconFile: {filenum}, {args.iconwidth}, {args.iconheight}, {args.iconx}, {args.icony}, {args.icon}') # may need to parameterize the sizes
+    f.write(f'IconFile: {filenum},{args.iconwidth},{args.iconheight},{args.iconx},{args.icony},{args.icon}\n') # may need to parameterize the sizes
     hovers = [0,0]
     if(args.name):
         hovers[0] = 1
@@ -40,10 +41,10 @@ with open(args.output, 'w') as f:
     for index, row in df.iterrows(): # for each row
         hoverText = ""
         if(hovers[0] == 1 and hovers[1] == 1):
-            hoverText += f', {args.labelname}: {row[args.name]}\\n{args.labeldesc}: {row[args.description]}\n'
+            hoverText += f',{args.labelname}: {row[args.name]}\\n{args.labeldesc}: {row[args.description]}\n'
         elif(hovers[0] == 1):
-            hoverText += f', {row[args.name]}\n'
+            hoverText += f',{row[args.name]}\n'
         elif(hovers[1] == 1):
-            hoverText += f', {row[args.description]}\n'
+            hoverText += f',{row[args.description]}\n'
         ia = row[args.iconangle] if args.iconangle else 0
-        f.write(f'Icon: {row[args.latitude]},{row[args.longitude]},{ia},{filenum}{hoverText}\n')
+        f.write(f'Icon: {row[args.latitude]},{row[args.longitude]},{ia},{filenum},{args.iconnumber}{hoverText}\n')
